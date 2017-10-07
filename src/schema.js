@@ -5,16 +5,38 @@ import {
     GraphQLString
 } from 'graphql';
 
-export const schema = new GraphQLSchema({
-    query: new GraphQLObjectType({
-        name: 'RootQueryType',
+
+import mongoose from 'mongoose';
+import User from './models/user/schema';
+
+import {
+  UserQueries,
+  UserMutations,
+  UserType
+  } from './models/user';
+
+
+
+let RootQuery = new GraphQLObjectType({
+        name: 'Query',
         fields: {
-            hello: {
-                type: GraphQLString,
-                resolve() {
-                    return 'world';
-                }
-            }
+            user: UserQueries.user,
+            users: UserQueries.users,
         }
-    })
 });
+
+
+
+let RootMutation = new GraphQLObjectType({
+  name: "Mutation",
+  fields: () => ({
+    addUser: UserMutations.addUser,
+  })
+});
+
+
+export const schema = new GraphQLSchema({
+    query: RootQuery,
+    mutation: RootMutation
+});
+
