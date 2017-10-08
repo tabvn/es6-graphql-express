@@ -5,33 +5,43 @@ import {
     GraphQLString
 } from 'graphql';
 
+import {
+    connectionArgs,
+    connectionDefinitions,
+    connectionFromArray,
+    cursorForObjectInConnection,
+    fromGlobalId,
+    globalIdField,
+    mutationWithClientMutationId,
+    nodeDefinitions,
+    toGlobalId,
+} from 'graphql-relay';
 
-import mongoose from 'mongoose';
-import User from './models/user/schema';
+import {node, nodes} from './models/node';
 
 import {
-  UserQueries,
-  UserMutations,
-  UserType
-  } from './models/user';
-
+    UserQueries,
+    UserMutations,
+    UserType
+} from './models/user';
 
 
 let RootQuery = new GraphQLObjectType({
-        name: 'Query',
-        fields: {
-            user: UserQueries.user,
-            users: UserQueries.users,
-        }
+    name: 'Query',
+    fields: {
+        user: UserQueries.user,
+        users: UserQueries.users,
+        node,
+        nodes,
+    }
 });
 
 
-
 let RootMutation = new GraphQLObjectType({
-  name: "Mutation",
-  fields: () => ({
-    addUser: UserMutations.addUser,
-  })
+    name: "Mutation",
+    fields: () => ({
+        addUser: UserMutations.addUser,
+    })
 });
 
 
