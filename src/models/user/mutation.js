@@ -8,36 +8,36 @@ import {
     GraphQLID
 } from 'graphql';
 
+import {mutationWithClientMutationId} from 'graphql-relay';
+
 import UserType from './type';
 import User from './schema';
 
-export default {
-    addUser: {
-        type: UserType,
-        args: {
-            name: {
-                name: 'name',
-                type: new GraphQLNonNull(GraphQLString)
-            },
-            email: {
-                name: 'email',
-                type: new GraphQLNonNull(GraphQLString)
-            },
-            password: {
-                name: 'password',
-                type: new GraphQLNonNull(GraphQLString)
-            }
-        },
-        resolve: (root, input) => {
 
-            let newUser = new User(input);
-
-            return new Promise((resolve, reject) => {
-
-                User.create(input, (err, user) => {
-                    err ? reject(err) : resolve(user);
-                })
-            });
-        }
+const inputFields = {
+    name: {
+        type: new GraphQLNonNull(GraphQLString),
+    },
+    email: {
+        type: new GraphQLNonNull(GraphQLString)
+    },
+    password: {
+        type: new GraphQLNonNull(GraphQLString)
     }
 };
+
+const outputFields = {
+    user: {
+        type: UserType
+    }
+}
+
+export const createUser = mutationWithClientMutationId({
+    name: 'createUser',
+    inputFields,
+    outputFields,
+    async mutateAndGetPayload(input, context) {
+        let createdUser = await User.create(input);
+        return {user: await context.userLoader.load(createdUser._id)};
+    },
+});

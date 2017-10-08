@@ -5,18 +5,6 @@ import {
     GraphQLString
 } from 'graphql';
 
-import {
-    connectionArgs,
-    connectionDefinitions,
-    connectionFromArray,
-    cursorForObjectInConnection,
-    fromGlobalId,
-    globalIdField,
-    mutationWithClientMutationId,
-    nodeDefinitions,
-    toGlobalId,
-} from 'graphql-relay';
-
 import {node, nodes} from './models/node';
 
 import {
@@ -25,6 +13,7 @@ import {
     UserType
 } from './models/user';
 
+import {createUser} from './models/user/mutation'
 
 let RootQuery = new GraphQLObjectType({
     name: 'Query',
@@ -39,9 +28,9 @@ let RootQuery = new GraphQLObjectType({
 
 let RootMutation = new GraphQLObjectType({
     name: "Mutation",
-    fields: () => ({
-        addUser: UserMutations.addUser,
-    })
+    fields: {
+        createUser
+    }
 });
 
 
