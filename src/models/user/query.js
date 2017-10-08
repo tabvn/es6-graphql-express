@@ -7,12 +7,10 @@ import {
 } from 'graphql';
 
 import {
-    fromGlobalId,
     connectionDefinitions,
     forwardConnectionArgs,
     connectionFromArraySlice,
     cursorToOffset,
-    mutationWithClientMutationId,
 } from 'graphql-relay';
 
 import UserType from './type';
@@ -51,11 +49,9 @@ export default {
             const limit = typeof args.first === 'undefined' ? '10' : args.first;
             const offset = args.after ? cursorToOffset(args.after) + 1 : 0;
             const filter = args.filter ? args.filter : {};
-
-
             const data = await User.find(filter).limit(limit).skip(offset);
             const count = await User.find(filter).count();
-
+            
             return {
                 ...connectionFromArraySlice(data, args, {
                     sliceStart: offset,
